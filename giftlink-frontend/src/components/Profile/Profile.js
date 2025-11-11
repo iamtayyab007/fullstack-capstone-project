@@ -51,50 +51,53 @@ setUpdatedDetails({
   [e.target.name]: e.target.value,
 });
 };
-const handleSubmit = async () => {
-  try {
-    const response = await fetch(`/api/auth/update`, {
-      // 🧩 Task 1: set method
-      method: "PUT",
+const handleSubmit = async (e) => {
+  e.preventDefault(); // prevent default form submission
 
-      // 🧩 Task 2: set headers
+  try {
+    // Get auth token and email from sessionStorage
+    const authtoken = sessionStorage.getItem("auth-token");
+    const email = sessionStorage.getItem("email");
+
+    // Create payload with updated details
+    const payload = {
+      name: updatedDetails.name, // sending the updated name
+    };
+
+    const response = await fetch(`${urlConfig.backendUrl}/api/auth/update`, {
+      method: "PUT",
       headers: {
         "Authorization": `Bearer ${authtoken}`,
         "Content-Type": "application/json",
         "Email": email,
       },
-
-      // 🧩 Task 3: set body to send user details
       body: JSON.stringify(payload),
     });
 
     if (response.ok) {
-      // Assume response returns updated user details
-      const updatedDetails = await response.json();
+      const updatedUser = await response.json();
 
-      // 🧩 Task 4: set the new name in the AppContext
-      setUserName(updatedDetails.name);
+      // Update AppContext and sessionStorage
+      setUserName(updatedUser.name);
+      sessionStorage.setItem("name", updatedUser.name);
 
-      // 🧩 Task 5: set user name in the session
-      sessionStorage.setItem("name", updatedDetails.name);
-
-      setUserDetails(updatedDetails);
+      setUserDetails(updatedUser);
       setEditMode(false);
 
-      // Display success message to the user
+      // Display success message
       setChanged("Name Changed Successfully!");
       setTimeout(() => {
         setChanged("");
-        navigate("/");
+        navigate("/"); // or navigate to profile page
       }, 1000);
     } else {
-      // Handle error case
       throw new Error("Failed to update profile");
     }
   } catch (e) {
     console.log("Error updating details: " + e.message);
   }
 };
+
 
 return (
 <div className="profile-container">

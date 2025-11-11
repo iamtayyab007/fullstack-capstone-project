@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import './DetailsPage.css';
-import urlConfig from '../../data/urlConfig'; // assuming you have urlConfig file for backendUrl
+import { urlConfig } from '../../config; 
 
 function DetailsPage() {
     const navigate = useNavigate();

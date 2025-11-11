@@ -5,6 +5,7 @@ const cors = require('cors');
 const pinoLogger = require('./logger');
 
 const connectToDatabase = require('./models/db');
+const authRoutes=require("./routes/authRoutes")
 const {loadData} = require("./util/import-mongo/index");
 
 
@@ -46,6 +47,7 @@ app.use('/api/gifts',giftRoutes)
 //{{insert code here}}
 app.use('/api/search', searchRoutes);
 
+app.use('/api/auth', authRoutes);
 
 // Global Error Handler
 app.use((err, req, res, next) => {
